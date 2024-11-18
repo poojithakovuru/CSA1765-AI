@@ -1,0 +1,46 @@
+from collections import deque
+
+def water_jug_solver(a, b, target):
+    visited = set()  # To avoid repeating states
+    queue = deque([(0, 0)])  # Start with both jugs empty
+    steps = []  # To track the steps taken
+
+    while queue:
+        jug1, jug2 = queue.popleft()
+
+        if (jug1, jug2) in visited:
+            continue
+        visited.add((jug1, jug2))
+        steps.append((jug1, jug2))
+
+        # If the target is reached, return the steps
+        if jug1 == target or jug2 == target:
+            return steps
+
+        # Possible actions
+        next_states = [
+            (a, jug2),  # Fill jug1
+            (jug1, b),  # Fill jug2
+            (0, jug2),  # Empty jug1
+            (jug1, 0),  # Empty jug2
+            (jug1 - min(jug1, b - jug2), jug2 + min(jug1, b - jug2)),  # Pour jug1 -> jug2
+            (jug1 + min(jug2, a - jug1), jug2 - min(jug2, a - jug1)),  # Pour jug2 -> jug1
+        ]
+
+        # Add valid next states to the queue
+        for state in next_states:
+            if state not in visited:
+                queue.append(state)
+
+    return None  # No solution found
+
+# Example usage
+a, b, target = 4, 3, 2  # Jug capacities: 4L and 3L, target: 2L
+solution = water_jug_solver(a, b, target)
+
+if solution:
+    print("Steps to measure the target:")
+    for step in solution:
+        print(step)
+else:
+    print("No solution possible.")
