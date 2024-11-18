@@ -1,0 +1,26 @@
+def solve_queens(board, row):
+    if row == 8:  # Solution found
+        return True
+    for col in range(8):  # Try placing a queen in each column
+        if is_safe(board, row, col):
+            board[row][col] = 'Q'  # Place the queen
+            if solve_queens(board, row + 1):  # Recur for the next row
+                return True
+            board[row][col] = '.'  # Backtrack
+    return False
+
+def is_safe(board, row, col):
+    for i in range(row):  # Check column and diagonals
+        if board[i][col] == 'Q' or \
+           (col - (row - i) >= 0 and board[i][col - (row - i)] == 'Q') or \
+           (col + (row - i) < 8 and board[i][col + (row - i)] == 'Q'):
+            return False
+    return True
+
+# Initialize an empty 8x8 board
+board = [['.' for _ in range(8)] for _ in range(8)]
+solve_queens(board, 0)
+
+# Print one solution
+for row in board:
+    print(''.join(row))
